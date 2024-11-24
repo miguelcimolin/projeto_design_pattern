@@ -5,15 +5,15 @@ from models.order import Order
 from states.pending_state import PendingState
 from observers.email_notification import EmailNotification
 from observers.sms_notification import SMSNotification
-from functions import generate_client_data, get_next_sequencial, initialize_db
+from functions import generate_client_data, get_next_sequencial, initialize_db, consultarBanco
 import time
+
+db_path = "bd/banco.db"
 
 initialize_db()
 
 def criar():
     print("Sistema de Gestão de Pedidos\n")
-
-    db_path = "bd/banco.db"
 
     order_id = str(uuid.uuid4())
     nome_cliente, cpf_cliente = generate_client_data()
@@ -59,7 +59,7 @@ def main():
         print("\n---------------")
         print("Selecione uma opção:")
         print("1 - Criar novo Pedido")
-        print("2 - Consultar Resultados")
+        print("2 - Consultar Pedidos")
         print("0 - Sair")
         print("---------------")
 
@@ -68,7 +68,10 @@ def main():
         if resposta == "1":
             criar()
         elif resposta == "2":
-            print("consultar")
+            print("Consultando últimos 10 registros...")
+            consulta = consultarBanco(db_path)
+            for each in consulta:
+                print(f"ID: {each[0]} | Sequencial: {each[1]} | Nome: {each[2]} | CPF: {each[3]} | Estado: {each[5]}")
         elif resposta == "0":
             print("Saindo do sistema. Até logo!")
             break

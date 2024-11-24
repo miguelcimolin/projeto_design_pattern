@@ -6,24 +6,6 @@ class Order:
         self.state = None
         self.observers = []
         self.db_path = db_path
-        self._initialize_db()
-
-    def _initialize_db(self):
-        """Cria a tabela no banco de dados, se ela não existir."""
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS ordem (
-                id TEXT PRIMARY KEY,
-                sequencial INTEGER,
-                nome_cliente TEXT,
-                cpf_cliente TEXT,
-                data_compra DATE,
-                estado TEXT
-            )
-        ''')
-        conn.commit()
-        conn.close()
 
     def _persist_final_state(self):
         """Persiste o estado final 'Completed' no banco de dados."""
@@ -36,7 +18,10 @@ class Order:
         conn.close()
 
     def complete_order(self):
-        """Finaliza o pedido sem definir o estado como None."""
+        """
+        Finaliza o pedido sem definir o estado como None.
+        Necessário pois o último estado estava definindo como "NoneType".
+        """
         self.state = None
         self._persist_final_state()
         print(f"Pedido {self.order_id} foi finalizado e registrado como 'Completed' no banco de dados.")

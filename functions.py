@@ -38,3 +38,14 @@ def get_next_sequencial(db_path="db/banco.db"):
 
     conn.close()
     return (result or 0) + 1
+
+def consultarBanco(db_path="db/banco.db"):
+    """Obtém os últimos 10 registros criados no BD"""
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM ordem ORDER BY sequencial DESC LIMIT 10")
+    result = cursor.fetchall()
+
+    conn.close()
+    return result
